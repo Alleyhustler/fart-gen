@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fart Generator - ASCII Art</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #252424;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .title-image {
+      max-width: 50%;
+      height: auto;
+      margin-bottom: 30px;
+    }
+    
+    .container {
+      width: 80%;
+      max-width: 800px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .input-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    
+    input[type="text"] {
+      width: 90%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    
+    button:hover {
+      background-color: #45a049;
+    }
+    
+    .output-container {
+      background-color: #222;
+      color: rgb(255, 255, 255);
+      padding: 20px;
+      border-radius: 4px;
+      white-space: pre;
+      overflow-x: auto;
+      font-family: monospace;
+      line-height: 1;
+      margin-top: 10px;
+    }
+    
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+    
+    .spacing-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    input[type="range"] {
+      width: 150px;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 10px;
+    }
+    
+    .footer-links a {
+      color: #4CAF50;
+      text-decoration: none;
+    }
+    
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <img src="farts.png" alt="Fart Generator" class="title-image">
+  <div class="container">
+    <div class="input-group">
+      <label for="textInput">Enter your text:</label>
+      <input type="text" id="textInput" placeholder="Type something..." autofocus>
+    </div>
+    
+    <div class="controls">
+      <button id="generateBtn">Generate FART Art</button>
+      
+      <div class="spacing-control">
+        <label for="spacingControl">Character Spacing:</label>
+        <input type="range" id="spacingControl" min="-3" max="0" value="-2" step="1">
+        <span id="spacingValue">-2</span>
+      </div>
+    </div>
+    
+    <div class="output-container">
+      <pre id="asciiOutput">Your ASCII art will appear here...</pre>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <p>© 2025/22/04 Fart Generator - All Rights Reserved</p>
+    <div class="footer-links">
+      <a href="https://x.com/Gen_Fart" target="_blank">Twitter</a>
+      <a href="https://t.me/fartgen" target="_blank">Telegram</a>
+      <a href="https://pump.fun/profile/i1SqanXpbiJtaqDGGhdzdZmvB1JeqihfVCXt7WMKqCW" target="_blank">Buy $GENFART</a>
+    </div>
+  </div>
+
+  <script>
+    // Fixed version of Fart Generator - Using predefined font mapping
+    const slantFont = {
+      'A': [
+        '    ___ ',
+        '   /   |',
+        '  / /| |',
+        ' / ___ |',
+        '/_/  |_|',
+        '        '
+      ],
+      'B': [
+        '    ____ ',
+        '   / __ )',
+        '  / __  |',
+        ' / /_/ / ',
+        '/_____/  ',
+        '         '
+      ],
+      'C': [
+        '   ______',
+        '  / ____/',
+        ' / /     ',
+        '/ /___   ',
+        '\\____/   ',
+        '         '
+      ],
+      'D': [
+        '    ____ ',
+        '   / __ \\',
+        '  / / / /',
+        ' / /_/ / ',
+        '/_____/  ',
+        '         '
+      ],
+      'E': [
+        '    ______',
+        '   / ____/',
+        '  / __/   ',
+        ' / /___   ',
+        '/_____/   ',
+        '          '
+      ],
+      'F': [
+        '    ______',
+        '   / ____/',
+        '  / /_    ',
+        ' / __/    ',
+        '/_/       ',
+        '          '
+      ],
+      'G': [
+        '   ______',
+        '  / ____/',
+        ' / / __  ',
+        '/ /_/ /  ',
+        '\\____/   ',
+        '         '
+      ],
+      'H': [
+        '    __  __',
+        '   / / / /',
+        '  / /_/ / ',
+        ' / __  /  ',
+        '/_/ /_/   ',
+        '          '
+      ],
+      'I': [
+        '    ____',
+        '   /  _/',
+        '   / /  ',
+        ' _/ /   ',
+        '/___/   ',
+        '        '
+      ],
+      'J': [
+        '       __',
+        '      / /',
+        ' __  / / ',
+        '/ /_/ /  ',
+        '\\____/   ',
+        '         '
+      ],
+      'K': [
+        '    __ __',
+        '   / //_/',
+        '  / ,<   ',
+        ' / /| |  ',
+        '/_/ |_|  ',
+        '         '
+      ],
+      'L': [
+        '    __ ',
+        '   / / ',
+        '  / /  ',
+        ' / /___',
+        '/_____/',
+        '       '
+      ],
+      'M': [
+        '    __  ___',
+        '   /  |/  /',
+        '  / /|_/ / ',
+        ' / /  / /  ',
+        '/_/  /_/   ',
+        '           '
+      ],
+      'N': [
+        '    _   __',
+        '   / | / /',
+        '  /  |/ / ',
+        ' / /|  /  ',
+        '/_/ |_/   ',
+        '          '
+      ],
+      'O': [
+        '   ____ ',
+        '  / __ \\',
+        ' / / / /',
+        '/ /_/ / ',
+        '\\____/  ',
+        '        '
+      ],
+      'P': [
+        '    ____ ',
+        '   / __ \\',
+        '  / /_/ /',
+        ' / ____/ ',
+        '/_/      ',
+        '         '
+      ],
+      'Q': [
+        '   ____ ',
+        '  / __ \\',
+        ' / / / /',
+        '/ /_/ / ',
+        '\\___\\_\\ ',
+        '        '
+      ],
+      'R': [
+        '    ____ ',
+        '   / __ \\',
+        '  / /_/ /',
+        ' / _, _/ ',
+        '/_/ |_|  ',
+        '         '
+      ],
+      'S': [
+        '   _____',
+        '  / ___/',
+        '  \\__ \\ ',
+        ' ___/ / ',
+        '/____/  ',
+        '        '
+      ],
+      'T': [
+        '  ______',
+        ' /_  __/',
+        '  / /   ',
+        ' / /    ',
+        '/_/     ',
+        '        '
+      ],
+      'U': [
+        '   __  __',
+        '  / / / /',
+        ' / / / / ',
+        '/ /_/ /  ',
+        '\\____/   ',
+        '         '
+      ],
+      'V': [
+        ' _    __',
+        '| |  / /',
+        '| | / / ',
+        '| |/ /  ',
+        '|___/   ',
+        '        '
+      ],
+      'W': [
+        ' _       __',
+        '| |     / /',
+        '| | /| / / ',
+        '| |/ |/ /  ',
+        '|__/|__/   ',
+        '           '
+      ],
+      'X': [
+        '   _  __',
+        '  | |/ /',
+        '  |   / ',
+        ' /   |  ',
+        '/_/|_|  ',
+        '        '
+      ],
+      'Y': [
+        '__  __',
+        '\\ \\/ /',
+        ' \\  / ',
+        ' / /  ',
+        '/_/   ',
+        '      '
+      ],
+      'Z': [
+        ' _____',
+        '/__  /',
+        '  / / ',
+        ' / /__',
+        '/____/',
+        '      '
+      ],
+      'a': [
+        '        ',
+        '  ____ _',
+        ' / __ `/',
+        '/ /_/ / ',
+        '\\__,_/  ',
+        '        '
+      ],
+      'b': [
+        '    __  ',
+        '   / /_ ',
+        '  / __ \\',
+        ' / /_/ /',
+        '/_.___/ ',
+        '        '
+      ],
+      'c': [
+        '       ',
+        '  _____',
+        ' / ___/',
+        '/ /__  ',
+        '\\___/  ',
+        '       '
+      ],
+      'd': [
+        '       __',
+        '  ____/ /',
+        ' / __  / ',
+        '/ /_/ /  ',
+        '\\__,_/   ',
+        '         '
+      ],
+      'e': [
+        '      ',
+        '  ___ ',
+        ' / _ \\',
+        '/  __/',
+        '\\___/ ',
+        '      '
+      ],
+      'f': [
+        '    ____',
+        '   / __/',
+        '  / /_  ',
+        ' / __/  ',
+        '/_/     ',
+        '        '
+      ],
+      'g': [
+        '         ',
+        '   ____ _',
+        '  / __ `/',
+        ' / /_/ / ',
+        ' \\__, /  ',
+        '/____/   '
+      ],
+      'h': [
+        '    __  ',
+        '   / /_ ',
+        '  / __ \\',
+        ' / / / /',
+        '/_/ /_/ ',
+        '        '
+      ],
+      'i': [
+        '    _ ',
+        '   (_)',
+        '  / / ',
+        ' / /  ',
+        '/_/   ',
+        '      '
+      ],
+      'j': [
+        '       _ ',
+        '      (_)',
+        '     / / ',
+        '    / /  ',
+        ' __/ /   ',
+        '/___/    '
+      ],
+      'k': [
+        '    __  ',
+        '   / /__',
+        '  / //_/',
+        ' / ,<   ',
+        '/_/|_|  ',
+        '        '
+      ],
+      'l': [
+        '    __',
+        '   / /',
+        '  / / ',
+        ' / /  ',
+        '/_/   ',
+        '      '
+      ],
+      'm': [
+        '            ',
+        '   ____ ___ ',
+        '  / __ `__ \\',
+        ' / / / / / /',
+        '/_/ /_/ /_/ ',
+        '            '
+      ],
+      'n': [
+        '        ',
+        '   ____ ',
+        '  / __ \\',
+        ' / / / /',
+        '/_/ /_/ ',
+        '        '
+      ],
+      'o': [
+        '       ',
+        '  ____ ',
+        ' / __ \\',
+        '/ /_/ /',
+        '\\____/ ',
+        '       '
+      ],
+      'p': [
+        '         ',
+        '    ____ ',
+        '   / __ \\',
+        '  / /_/ /',
+        ' / .___/ ',
+        '/_/      '
+      ],
+      'q': [
+        '        ',
+        '  ____ _',
+        ' / __ `/',
+        '/ /_/ / ',
+        '\\__, /  ',
+        '  /_/   '
+      ],
+      'r': [
+        '        ',
+        '   _____',
+        '  / ___/',
+        ' / /    ',
+        '/_/     ',
+        '        '
+      ],
+      's': [
+        '        ',
+        '   _____',
+        '  / ___/',
+        ' (__  ) ',
+        '/____/  ',
+        '        '
+      ],
+      't': [
+        '   __ ',
+        '  / /_',
+        ' / __/',
+        '/ /_  ',
+        '\\__/  ',
+        '      '
+      ],
+      'u': [
+        '        ',
+        '  __  __',
+        ' / / / /',
+        '/ /_/ / ',
+        '\\__,_/  ',
+        '        '
+      ],
+      'v': [
+        '       ',
+        ' _   __',
+        '| | / /',
+        '| |/ / ',
+        '|___/  ',
+        '       '
+      ],
+      'w': [
+        '          ',
+        ' _      __',
+        '| | /| / /',
+        '| |/ |/ / ',
+        '|__/|__/  ',
+        '          '
+      ],
+      'x': [
+        '        ',
+        '   _  __',
+        '  | |/_/',
+        ' _>  <  ',
+        '/_/|_|  ',
+        '        '
+      ],
+      'y': [
+        '         ',
+        '   __  __',
+        '  / / / /',
+        ' / /_/ / ',
+        ' \\__, /  ',
+        '/____/   '
+      ],
+      'z': [
+        '     ',
+        ' ____',
+        '/_  /',
+        ' / /_',
+        '/___/',
+        '     '
+      ],
+      '0': [
+        '   ____ ',
+        '  / __ \\',
+        ' / / / /',
+        '/ /_/ / ',
+        '\\____/  ',
+        '        '
+      ],
+      '1': [
+        '   ___',
+        '  <  /',
+        '  / / ',
+        ' / /  ',
+        '/_/   ',
+        '      '
+      ],
+      '2': [
+        '   ___ ',
+        '  |__ \\',
+        '  __/ /',
+        ' / __/ ',
+        '/____/ ',
+        '       '
+      ],
+      '3': [
+        '   _____',
+        '  |__  /',
+        '   /_ < ',
+        ' ___/ / ',
+        '/____/  ',
+        '        '
+      ],
+      '4': [
+        '   __ __',
+        '  / // /',
+        ' / // /_',
+        '/__  __/',
+        '  /_/   ',
+        '        '
+      ],
+      '5': [
+        '    ______',
+        '   / ____/',
+        '  /___ \\  ',
+        ' ____/ /  ',
+        '/_____/   ',
+        '          '
+      ],
+      '6': [
+        '   _____',
+        '  / ___/',
+        ' / __ \\ ',
+        '/ /_/ / ',
+        '\\____/  ',
+        '        '
+      ],
+      '7': [
+        ' _____',
+        '/__  /',
+        '  / / ',
+        ' / /  ',
+        '/_/   ',
+        '      '
+      ],
+      '8': [
+        '   ____ ',
+        '  ( __ )',
+        ' / __  |',
+        '/ /_/ / ',
+        '\\____/  ',
+        '        '
+      ],
+      '9': [
+        '   ____ ',
+        '  / __ \\',
+        ' / /_/ /',
+        ' \\__, / ',
+        '/____/  ',
+        '        '
+      ],
+      ' ': [
+        '     ',
+        '     ',
+        '     ',
+        '     ',
+        '     ',
+        '     '
+      ],
+      '.': [
+        '   ',
+        '   ',
+        '   ',
+        ' _ ',
+        '(_)',
+        '   '
+      ],
+      ',': [
+        '     ',
+        '     ',
+        '     ',
+        '   _ ',
+        '  ( )',
+        '  |/ '
+      ],
+      '!': [
+        '    __',
+        '   / /',
+        '  / / ',
+        ' /_/  ',
+        '(_)   ',
+        '      '
+      ],
+      '?': [
+        '  ___ ',
+        ' /__ \\',
+        '  / _/',
+        ' /_/  ',
+        '(_)   ',
+        '      '
+      ],
+      '-': [
+        '       ',
+        '       ',
+        ' ______',
+        '/_____/',
+        '  $    ',
+        '       '
+      ],
+      '_': [
+        '       ',
+        '       ',
+        '       ',
+        '       ',
+        ' ______',
+        '/_____/'
+      ],
+      '=': [
+        '       ',
+        '  _____',
+        ' /____/',
+        '/____/ ',
+        '  $    ',
+        '       '
+      ],
+      '+': [
+        '       ',
+        '    __ ',
+        ' __/ /_',
+        '/_  __/',
+        ' /_/   ',
+        '       '
+      ],
+      '/': [
+        '       __',
+        '     _/_/',
+        '   _/_/  ',
+        ' _/_/    ',
+        '/_/      ',
+        '         '
+      ],
+      '\\': [
+        '__    ',
+        '\\ \\   ',
+        ' \\ \\  ',
+        '  \\ \\ ',
+        '   \\_\\',
+        '      '
+      ],
+      '(': [
+        '     __',
+        '   _/_/',
+        '  / /  ',
+        ' / /   ',
+        '/ /    ',
+        '|_|    '
+      ],
+      ')': [
+        '     _ ',
+        '    | |',
+        '    / /',
+        '   / / ',
+        ' _/_/  ',
+        '/_/    '
+      ],
+      '[': [
+        '     __',
+        '   _/_/',
+        '  / /  ',
+        ' / /   ',
+        '/ /    ',
+        '|_|    '
+      ],
+      ']': [
+        '     _ ',
+        '    | |',
+        '    / /',
+        '   / / ',
+        ' _/_/  ',
+        '/_/    '
+      ],
+      '{': [
+        '     __',
+        '   _/_/',
+        ' _/_/  ',
+        '< <    ',
+        '/ /    ',
+        '\\_\\    '
+      ],
+      '}': [
+        '     _ ',
+        '    | |',
+        '    / /',
+        '   _>_>',
+        ' _/_/  ',
+        '/_/    '
+      ],
+      '*': [
+        '       ',
+        '  __/|_',
+        ' |    /',
+        '/_ __| ',
+        ' |/    ',
+        '       '
+      ],
+      '&': [
+        '   ___   ',
+        '  ( _ )  ',
+        ' / __ \\/|',
+        '/ /_/  < ',
+        '\\____/\\/ ',
+        '         '
+      ],
+      '^': [
+        '  //|',
+        ' |/||',
+        '  $  ',
+        ' $   ',
+        '$    ',
+        '     '
+      ],
+      '%': [
+        '   _   __',
+        '  (_)_/_/',
+        '   _/_/  ',
+        ' _/_/_   ',
+        '/_/ (_)  ',
+        '         '
+      ],
+      '$': [
+        '     __',
+        '   _/ /',
+        '  / __/',
+        ' (_  ) ',
+        '/  _/  ',
+        '/_/    '
+      ],
+      '#': [
+        '     __ __ ',
+        '  __/ // /_',
+        ' /_  _  __/',
+        '/_  _  __/ ',
+        ' /_//_/    ',
+        '           '
+      ],
+      '@': [
+        '   ______ ',
+        '  / ____ \\',
+        ' / / __ `/',
+        '/ / /_/ / ',
+        '\\ \\__,_/  ',
+        ' \\____/   '
+      ],
+      '\'': [
+        '  _ ',
+        ' ( )',
+        ' |/ ',
+        ' $  ',
+        '$   ',
+        '    '
+      ],
+      '"': [
+        ' _ _ ',
+        '( | )',
+        '|/|/ ',
+        ' $   ',
+        '$    ',
+        '     '
+      ],
+      '`': [
+        '  _ ',
+        ' ( )',
+        '  V ',
+        ' $  ',
+        '$   ',
+        '    '
+      ],
+      '~': [
+        '  /\\//',
+        ' //\\/ ',
+        '  $   ',
+        ' $    ',
+        '$     ',
+        '      '
+      ]
+    };
+
+    // Function to calculate the effective width of a character (excluding trailing spaces)
+    function getEffectiveWidth(charLines) {
+      let maxWidth = 0;
+      for (let line of charLines) {
+        // Find the last non-space character
+        let lastNonSpace = line.length - 1;
+        while (lastNonSpace >= 0 && line[lastNonSpace] === ' ') {
+          lastNonSpace--;
+        }
+        maxWidth = Math.max(maxWidth, lastNonSpace + 1);
+      }
+      return maxWidth;
+    }
+
+    // Function to trim trailing spaces from each line of a character
+    function trimTrailingSpaces(charLines) {
+      return charLines.map(line => {
+        let lastChar = line.length - 1;
+        while (lastChar >= 0 && line[lastChar] === ' ') {
+          lastChar--;
+        }
+        return line.substring(0, lastChar + 1);
+      });
+    }
+
+    // Function to generate ASCII art with adjustable spacing
+    function generateAscii(text, spacing) {
+      if (!text || text.trim() === '') {
+        return 'Please enter some text!';
+      }
+
+      const charHeight = 6; // Each character is 6 lines tall
+      const result = Array(charHeight).fill('');
+
+      // Process each character in the input text
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i].toUpperCase(); // Convert to uppercase
+        let charData = slantFont[char] || slantFont[' ']; // Default to space if character not found
+        
+        // If not the first character, adjust spacing
+        if (i > 0) {
+          // Trim trailing spaces from the current char data
+          let trimmedCharData = [...charData];
+          
+          // Add spacing adjustment to the left of each line
+          trimmedCharData = trimmedCharData.map(line => {
+            // Count leading spaces
+            let leadingSpaces = 0;
+            while (leadingSpaces < line.length && line[leadingSpaces] === ' ') {
+              leadingSpaces++;
+            }
+            
+            // Adjust leading spaces based on spacing parameter
+            let newLeadingSpaces = Math.max(0, leadingSpaces + spacing);
+            return ' '.repeat(newLeadingSpaces) + line.substring(leadingSpaces);
+          });
+          
+          charData = trimmedCharData;
+        }
+        
+        // Add each line of the character to the corresponding line in the result
+        for (let j = 0; j < charHeight; j++) {
+          result[j] += charData[j] || '';
+        }
+      }
+
+      // Join the lines with newlines to form the ASCII art
+      return result.join('\n');
+    }
+
+    // Generate art function
+    function generateArt() {
+      const inputText = document.getElementById('textInput').value;
+      const spacing = parseInt(document.getElementById('spacingControl').value);
+      const output = generateAscii(inputText, spacing);
+      document.getElementById('asciiOutput').textContent = output;
+    }
+
+    // Update spacing value display
+    function updateSpacingValue() {
+      document.getElementById('spacingValue').textContent = document.getElementById('spacingControl').value;
+    }
+
+    // Add event listeners
+    document.getElementById('generateBtn').addEventListener('click', generateArt);
+    
+    document.getElementById('spacingControl').addEventListener('input', function() {
+      updateSpacingValue();
+      generateArt();
+    });
+
+    // Also generate when Enter key is pressed in the input field
+    document.getElementById('textInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        generateArt();
+      }
+    });
+
+    // Initialize when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set initial placeholder text
+      document.getElementById('asciiOutput').textContent = 'Enter text and click Generate!';
+      updateSpacingValue();
+    });
+  </script>
+</body>
+</html>
+
